@@ -89,4 +89,6 @@ recommended_items = np.argsort(-scores)
 product_mapping = df[['product_index', 'product_name']].drop_duplicates().set_index('product_index')['product_name']
 print("Recomendaciones para el usuario:", product_mapping.iloc[recommended_items[:10]])
 
+print("Recomendaciones para el usuario 0:")
+print(product_mapping.iloc[recommended_items[:10]])
 

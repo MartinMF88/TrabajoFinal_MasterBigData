@@ -1,9 +1,3 @@
-import zipfile
-import pandas as pd
-from surprise import SVD, Dataset, Reader
-from surprise.model_selection import train_test_split
-from surprise import accuracy
-
 # --- PASO 1: Cargar los datos ---
 zip_path = '../00_Data_Bases/Cluster5_1_items.zip' 
 csv_filename = 'Cluster5_1_items.csv'

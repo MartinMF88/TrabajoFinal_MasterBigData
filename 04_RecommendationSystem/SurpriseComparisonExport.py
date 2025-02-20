@@ -1,79 +1,97 @@
-import pandas as pd
-
-def generate_comparison_html():
-    data = {
-        "Métrica": ["RMSE", "MAE", "Precision@10", "Recall@10", "Recomendaciones"],
-        "Ejecución 1 (Original)": [0.4507, "N/A", "N/A", "N/A", 
-                                    "['milk', 'water seltzer sparkling water', 'bread', 'packaged produce', 'soft drinks', 'yogurt', 'fresh fruits', 'refrigerated', 'eggs', 'energy sports drinks']"],
-        "Ejecución 2 (Optimización de Hiperparámetros)": [0.4499, 0.3973, "N/A", "N/A", 
-                                                           "['water seltzer sparkling water', 'milk', 'yogurt', 'soft drinks', 'packaged produce', 'fresh fruits', 'soy lactosefree', 'packaged vegetables fruits', 'cream', 'energy sports drinks']"],
-        "Ejecución 3 (Optimización + Precision/Recall)": [0.4488, 0.3973, 0.1685, 0.7406, 
-                                                          "['water seltzer sparkling water', 'milk', 'packaged produce', 'fresh fruits', 'eggs', 'energy sports drinks', 'bread', 'white wines', 'soy lactosefree', 'soft drinks']"]
-    }
-    
-    df_comparison = pd.DataFrame(data)
-    html_output_path = "Surprise_Model_comparison_results.html"
-    df_comparison.to_html(html_output_path, index=False)
-    
-    with open(html_output_path, "a", encoding="utf-8") as file:
-        file.write("""
+def generate_tf_comparison_html():
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Comparación de Modelos en TensorFlow</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; background-color: #f8f9fa; }
-            h2 { text-align: center; color: #333; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-            th { background-color: #007bff; color: white; }
+            body { font-family: Arial, sans-serif; margin: 40px; padding: 20px; background-color: #f9f9f9; }
+            h1, h2, h3 { color: #333; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+            th { background-color: #4CAF50; color: white; }
             tr:nth-child(even) { background-color: #f2f2f2; }
-            .recommendations { font-size: 14px; color: #555; }
-            .conclusion { margin-top: 20px; padding: 15px; background: white; }
         </style>
-        
+    </head>
+    <body>
+
+        <h1>Comparación de Modelos de TensorFlow</h1>
+
         <h2>Descripción del Sistema de Recomendación</h2>
-        <p>Nuestro sistema de recomendación utiliza la librería <strong>Surprise</strong> para implementar un modelo basado en <strong>Singular Value Decomposition (SVD)</strong>. El flujo del sistema es el siguiente:</p>
-        
-        <h3>1. Carga y Preprocesamiento de Datos</h3>
-        <p>Se cargan los datos de productos y usuarios, asegurando que estén correctamente estructurados en el formato necesario para Surprise (usuario, ítem, rating).</p>
-
-        <h3>2. Entrenamiento del Modelo con SVD</h3>
-        <p>Se utiliza el algoritmo <strong>SVD</strong> para factorizar la matriz usuario-producto en representaciones de menor dimensión. 
-        Esto permite capturar patrones de preferencia implícita en los datos y mejorar la calidad de las recomendaciones.</p>
-
-        <h3>3. Optimización de Hiperparámetros</h3>
-        <p>Para mejorar la precisión del modelo, se realiza una búsqueda de hiperparámetros, ajustando valores como:</p>
+        <p>Nuestro sistema de recomendación implementado en TensorFlow utiliza embeddings para modelar las interacciones entre usuarios y productos. Se evaluaron dos versiones del modelo:</p>
         <ul>
-            <li><strong>n_factors:</strong> Número de dimensiones en la factoración de la matriz.</li>
-            <li><strong>n_epochs:</strong> Número de iteraciones en el entrenamiento.</li>
-            <li><strong>lr_all:</strong> Tasa de aprendizaje global del algoritmo.</li>
-            <li><strong>reg_all:</strong> Parámetro de regularización para evitar sobreajuste.</li>
+            <li><strong>Modelo Original:</strong> Utiliza una arquitectura básica basada en el producto punto de los embeddings de usuario y producto.</li>
+            <li><strong>Modelo Tuned:</strong> Incluye mejoras en hiperparámetros y arquitectura, agregando capas densas (MLP) para modelar relaciones más complejas.</li>
         </ul>
 
-        <h3>4. Evaluación con Métricas Explícitas</h3>
-        <p>Para medir la calidad del modelo, se utilizan métricas como:</p>
+        <h2>Comparación de Resultados</h2>
+        <table>
+            <tr>
+                <th>Métrica</th>
+                <th>Modelo Original</th>
+                <th>Modelo Tuned</th>
+            </tr>
+            <tr>
+                <td>RMSE</td>
+                <td>0.4487</td>
+                <td><strong>0.3736</strong></td>
+            </tr>
+            <tr>
+                <td>MAE</td>
+                <td>0.3579</td>
+                <td><strong>0.2899</strong></td>
+            </tr>
+            <tr>
+                <td>Precision@10</td>
+                <td>0.7844</td>
+                <td><strong>0.8007</strong></td>
+            </tr>
+            <tr>
+                <td>Recall@10</td>
+                <td>0.6946</td>
+                <td><strong>0.8430</strong></td>
+            </tr>
+            <tr>
+                <td>NDCG@10</td>
+                <td>0.2410</td>
+                <td><strong>0.8611</strong></td>
+            </tr>
+        </table>
+
+        <h2>Ejemplo de Recomendaciones</h2>
+        <h3>Modelo Original:</h3>
         <ul>
-            <li><strong>RMSE (Root Mean Square Error):</strong> Evalúa la diferencia entre predicciones y valores reales.</li>
-            <li><strong>MAE (Mean Absolute Error):</strong> Mide el error absoluto promedio.</li>
-            <li><strong>Precision@10 y Recall@10:</strong> Evalúan qué tan bien se recomiendan productos relevantes.</li>
+            <li>Packaged poultry (0.01)</li>
+            <li>Pickled goods olives (0.01)</li>
+            <li>Cream (0.00)</li>
+            <li>Yogurt (0.00)</li>
+            <li>Fresh fruits (0.00)</li>
         </ul>
 
-        <h3>5. Generación de Recomendaciones</h3>
-        <p>Una vez optimizado el modelo, se generan recomendaciones personalizadas para cada usuario, basadas en su historial de interacciones con los productos.</p>
+        <h3>Modelo Tuned:</h3>
+        <ul>
+            <li>Spirits (0.74)</li>
+            <li>Milk (0.73)</li>
+            <li>Bread (0.73)</li>
+            <li>Soy lactosefree (0.69)</li>
+            <li>Soft drinks (0.69)</li>
+        </ul>
 
-        <h2>Conclusiones</h2>
-        <p><strong>Importancia de las métricas seleccionadas:</strong><br>
-        <strong>RMSE:</strong> Evalúa la precisión del modelo, penalizando más los errores grandes.<br>
-        <strong>MAE:</strong> Mide el error absoluto promedio, proporcionando una interpretación más intuitiva.<br>
-        <strong>Precision@10:</strong> Indica la relevancia de las recomendaciones en el top 10.<br>
-        <strong>Recall@10:</strong> Evalúa qué tan bien el modelo recupera elementos relevantes.</p>
+        <h2>Conclusión</h2>
+        <p>El modelo tuned muestra mejoras significativas en todas las métricas, especialmente en Recall y NDCG@10. Esto sugiere que el modelo no solo hace mejores predicciones, sino que también ordena mejor las recomendaciones. La optimización de hiperparámetros y la inclusión de capas densas han permitido mejorar la calidad del sistema de recomendación de manera notable.</p>
 
-        <p><strong>Análisis de cambios en las métricas:</strong><br>
-        La optimización de los hiperparámetros logró reducir el RMSE de 0.4507 a 0.4488, indicando una ligera mejora en la precisión de las predicciones. El MAE también mejoró al incorporar la optimización.
-        La adición de Precision@10 y Recall@10 en la tercera ejecución mostró que, aunque el modelo optimizado logró reducir errores, también mejoró la calidad de las recomendaciones con un recall significativo de 0.7406, indicando que una gran cantidad de productos relevantes están siendo correctamente recomendados.</p>
+    </body>
+    </html>
+    """
 
-        <p><strong>Análisis de cambios en las recomendaciones:</strong><br>
-        Se observa que las recomendaciones evolucionaron en cada optimización. En la primera ejecución, los productos eran más genéricos, como "milk" y "bread". Con la optimización de hiperparámetros, se incorporaron productos más específicos como "soy lactosefree" y "cream". Finalmente, en la tercera ejecución, se mejoró la diversidad de recomendaciones, incluyendo productos como "white wines", lo que indica una mejor adaptación a las preferencias del usuario.</p>
-        """)
+    output_path = "C:/Users/Florencia/OneDrive/2- MASTER EN BIG DATA/Tesis/Tesis/TrabajoFinal_MasterBigData/04_RecommendationSystem/Tensor_Flow_Recommender/Tensor_Flow_Model_comparison_results.html"
 
-    print(f"El archivo de comparación ha sido exportado a {html_output_path}")
+    with open(output_path, "w", encoding="utf-8") as file:
+        file.write(html_content)
 
-if __name__ == "__main__":
-    generate_comparison_html()
+    print(f"Archivo HTML guardado en: {output_path}")
+
+# Llamar a la función para generar el HTML
+generate_tf_comparison_html()

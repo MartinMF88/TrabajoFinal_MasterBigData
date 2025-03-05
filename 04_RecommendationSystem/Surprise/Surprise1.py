@@ -1,5 +1,12 @@
+import zipfile
+import pandas as pd
+from surprise import SVD, Dataset, Reader
+from surprise.model_selection import train_test_split, GridSearchCV
+from surprise import accuracy
+from collections import defaultdict
+
 # --- PASO 1: Cargar los datos ---
-zip_path = '../00_Data_Bases/Cluster5_1_items.zip' 
+zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_items.zip"
 csv_filename = 'Cluster5_1_items.csv'
 
 with zipfile.ZipFile(zip_path, 'r') as z:

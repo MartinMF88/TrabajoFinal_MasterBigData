@@ -5,7 +5,7 @@ from surprise.model_selection import train_test_split, GridSearchCV
 from surprise import accuracy
 
 # --- PASO 1: Cargar los datos ---
-zip_path = '../00_Data_Bases/Cluster5_1_items.zip' 
+zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_items.zip"
 csv_filename = 'Cluster5_1_items.csv'
 
 with zipfile.ZipFile(zip_path, 'r') as z:
@@ -64,3 +64,7 @@ product_mapping = df[['product_id', 'product_name']].drop_duplicates().set_index
 top_recommendations = [product_mapping[item[0]] for item in predictions[:10]]
 print("\nRecomendaciones para el usuario 0:")
 print(top_recommendations)
+
+
+print("Mejores parámetros encontrados:", best_params)
+

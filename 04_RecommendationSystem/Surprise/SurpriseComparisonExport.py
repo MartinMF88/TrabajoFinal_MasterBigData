@@ -1,97 +1,117 @@
-def generate_tf_comparison_html():
-    html_content = """
-    <!DOCTYPE html>
-    <html lang="es">
+import os
+
+def generate_surprise_comparison_html():
+    html = """
+    <html>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Comparación de Modelos en TensorFlow</title>
+        <title>Comparación de Modelos Surprise</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 40px; padding: 20px; background-color: #f9f9f9; }
+            body { font-family: Arial, sans-serif; margin: 40px; background-color: #f8f9fa; }
             h1, h2, h3 { color: #333; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-            th { background-color: #4CAF50; color: white; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+            th { background-color: #007bff; color: white; }
             tr:nth-child(even) { background-color: #f2f2f2; }
+            .recommendations { font-size: 14px; color: #555; }
+            .conclusion { margin-top: 20px; padding: 15px; background: white; }
         </style>
     </head>
     <body>
-
-        <h1>Comparación de Modelos de TensorFlow</h1>
-
-        <h2>Descripción del Sistema de Recomendación</h2>
-        <p>Nuestro sistema de recomendación implementado en TensorFlow utiliza embeddings para modelar las interacciones entre usuarios y productos. Se evaluaron dos versiones del modelo:</p>
-        <ul>
-            <li><strong>Modelo Original:</strong> Utiliza una arquitectura básica basada en el producto punto de los embeddings de usuario y producto.</li>
-            <li><strong>Modelo Tuned:</strong> Incluye mejoras en hiperparámetros y arquitectura, agregando capas densas (MLP) para modelar relaciones más complejas.</li>
-        </ul>
-
-        <h2>Comparación de Resultados</h2>
+        <h1>Comparación de Modelos Surprise</h1>
+        <p>Este reporte presenta la comparación de distintos modelos de recomendación utilizando la librería <strong>Surprise</strong>.</p>
+        
+        <h2>Métricas de Evaluación</h2>
         <table>
             <tr>
-                <th>Métrica</th>
-                <th>Modelo Original</th>
-                <th>Modelo Tuned</th>
+                <th>Modelo</th>
+                <th>n_factors</th>
+                <th>lr_all</th>
+                <th>reg_all</th>
+                <th>RMSE</th>
+                <th>MAE</th>
+                <th>Precision@10</th>
+                <th>Recall@10</th>
             </tr>
             <tr>
-                <td>RMSE</td>
-                <td>0.4487</td>
-                <td><strong>0.3736</strong></td>
+                <td>Surprise2</td>
+                <td>50</td>
+                <td>0.01</td>
+                <td>0.1</td>
+                <td>0.4488</td>
+                <td>0.3981</td>
+                <td>0.1678</td>
+                <td>0.7379</td>
             </tr>
             <tr>
-                <td>MAE</td>
-                <td>0.3579</td>
-                <td><strong>0.2899</strong></td>
+                <td>Surprise3 (GridSearch)</td>
+                <td>50</td>
+                <td>0.01</td>
+                <td>0.1</td>
+                <td>0.4496</td>
+                <td>0.3986</td>
+                <td>-</td>
+                <td>-</td>
             </tr>
             <tr>
-                <td>Precision@10</td>
-                <td>0.7844</td>
-                <td><strong>0.8007</strong></td>
+                <td>Surprise4</td>
+                <td>150</td>
+                <td>0.01</td>
+                <td>0.1</td>
+                <td>0.5629</td>
+                <td>0.4863</td>
+                <td>0.6833</td>
+                <td>0.7662</td>
             </tr>
             <tr>
-                <td>Recall@10</td>
-                <td>0.6946</td>
-                <td><strong>0.8430</strong></td>
-            </tr>
-            <tr>
-                <td>NDCG@10</td>
-                <td>0.2410</td>
-                <td><strong>0.8611</strong></td>
+                <td>Surprise1</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>0.4499</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
             </tr>
         </table>
 
-        <h2>Ejemplo de Recomendaciones</h2>
-        <h3>Modelo Original:</h3>
-        <ul>
-            <li>Packaged poultry (0.01)</li>
-            <li>Pickled goods olives (0.01)</li>
-            <li>Cream (0.00)</li>
-            <li>Yogurt (0.00)</li>
-            <li>Fresh fruits (0.00)</li>
-        </ul>
+        <h2>Recomendaciones por Modelo</h2>
+        <h3>Surprise2</h3>
+        <p class="recommendations">['water seltzer sparkling water', 'milk', 'eggs', 'yogurt', 'fresh fruits', 'packaged produce', 'cream', 'soy lactosefree', 'energy sports drinks', 'soft drinks']</p>
+        
+        <h3>Surprise3 (GridSearch)</h3>
+        <p class="recommendations">['water seltzer sparkling water', 'yogurt', 'milk', 'packaged produce', 'cream', 'fresh fruits', 'eggs', 'refrigerated', 'bread', 'soft drinks']</p>
+        
+        <h3>Surprise4</h3>
+        <p class="recommendations">['cream', 'eggs', 'water seltzer sparkling water', 'yogurt', 'fresh fruits', 'pickled goods olives', 'packaged poultry', 'fresh vegetables', 'packaged cheese', 'other creams cheeses']</p>
+        
+        <h3>Surprise1</h3>
+        <p class="recommendations">['milk', 'water seltzer sparkling water', 'packaged produce', 'yogurt', 'soft drinks', 'fresh fruits', 'soy lactosefree', 'cream', 'eggs', 'energy sports drinks']</p>
 
-        <h3>Modelo Tuned:</h3>
-        <ul>
-            <li>Spirits (0.74)</li>
-            <li>Milk (0.73)</li>
-            <li>Bread (0.73)</li>
-            <li>Soy lactosefree (0.69)</li>
-            <li>Soft drinks (0.69)</li>
-        </ul>
-
-        <h2>Conclusión</h2>
-        <p>El modelo tuned muestra mejoras significativas en todas las métricas, especialmente en Recall y NDCG@10. Esto sugiere que el modelo no solo hace mejores predicciones, sino que también ordena mejor las recomendaciones. La optimización de hiperparámetros y la inclusión de capas densas han permitido mejorar la calidad del sistema de recomendación de manera notable.</p>
-
+        <h2>Conclusiones</h2>
+        <div class="conclusion">
+            <p><strong>1- Precisión vs Complejidad del Modelo:</strong><br>
+            Aunque el modelo con <strong>n_factors=150</strong> en Surprise4 tiene mayor recall, su error es significativamente mayor (RMSE de 0.5629 vs. 0.4488 en Surprise2). Esto sugiere que un mayor número de factores no siempre mejora la calidad de las recomendaciones.</p>
+            
+            <p><strong>2- Optimización de Parámetros:</strong><br>
+            El uso de GridSearch en Surprise3 resultó en valores de RMSE y MAE similares a los de Surprise2, lo que indica que el modelo ya estaba bien ajustado.</p>
+            
+            <p><strong>3- Variabilidad en las Recomendaciones:</strong><br>
+            Cada modelo sugiere productos ligeramente distintos, pero hay coincidencias en artículos clave como 'water seltzer sparkling water', 'yogurt', y 'milk', lo que demuestra la consistencia del sistema.</p>
+        </div>
     </body>
     </html>
     """
+    
+    save_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_Model_Comparison_Results.html"
+    
+    try:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        with open(save_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+        print(f"✅ Archivo guardado exitosamente en:\n{save_path}")
+    except Exception as e:
+        print(f"❌ Error al guardar el archivo: {str(e)}")
+    
+    return html
 
-    output_path = "C:/Users/Florencia/OneDrive/2- MASTER EN BIG DATA/Tesis/Tesis/TrabajoFinal_MasterBigData/04_RecommendationSystem/Tensor_Flow_Recommender/Tensor_Flow_Model_comparison_results.html"
-
-    with open(output_path, "w", encoding="utf-8") as file:
-        file.write(html_content)
-
-    print(f"Archivo HTML guardado en: {output_path}")
-
-# Llamar a la función para generar el HTML
-generate_tf_comparison_html()
+generate_surprise_comparison_html()

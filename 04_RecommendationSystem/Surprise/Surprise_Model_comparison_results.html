@@ -1,48 +1,10 @@
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>Métrica</th>
-      <th>Ejecución 1 (Original)</th>
-      <th>Ejecución 2 (Optimización de Hiperparámetros)</th>
-      <th>Ejecución 3 (Optimización + Precision/Recall)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>RMSE</td>
-      <td>0.4507</td>
-      <td>0.4499</td>
-      <td>0.4488</td>
-    </tr>
-    <tr>
-      <td>MAE</td>
-      <td>N/A</td>
-      <td>0.3973</td>
-      <td>0.3973</td>
-    </tr>
-    <tr>
-      <td>Precision@10</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>0.1685</td>
-    </tr>
-    <tr>
-      <td>Recall@10</td>
-      <td>N/A</td>
-      <td>N/A</td>
-      <td>0.7406</td>
-    </tr>
-    <tr>
-      <td>Recomendaciones</td>
-      <td>['milk', 'water seltzer sparkling water', 'bread', 'packaged produce', 'soft drinks', 'yogurt', 'fresh fruits', 'refrigerated', 'eggs', 'energy sports drinks']</td>
-      <td>['water seltzer sparkling water', 'milk', 'yogurt', 'soft drinks', 'packaged produce', 'fresh fruits', 'soy lactosefree', 'packaged vegetables fruits', 'cream', 'energy sports drinks']</td>
-      <td>['water seltzer sparkling water', 'milk', 'packaged produce', 'fresh fruits', 'eggs', 'energy sports drinks', 'bread', 'white wines', 'soy lactosefree', 'soft drinks']</td>
-    </tr>
-  </tbody>
-</table>
+
+    <html>
+    <head>
+        <title>Comparación de Modelos Surprise</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; background-color: #f8f9fa; }
-            h2 { text-align: center; color: #333; }
+            body { font-family: Arial, sans-serif; margin: 40px; background-color: #f8f9fa; }
+            h1, h2, h3 { color: #333; }
             table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
             th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
             th { background-color: #007bff; color: white; }
@@ -50,48 +12,89 @@
             .recommendations { font-size: 14px; color: #555; }
             .conclusion { margin-top: 20px; padding: 15px; background: white; }
         </style>
+    </head>
+    <body>
+        <h1>Comparación de Modelos Surprise</h1>
+        <p>Este reporte presenta la comparación de distintos modelos de recomendación utilizando la librería <strong>Surprise</strong>.</p>
         
-        <h2>Descripción del Sistema de Recomendación</h2>
-        <p>Nuestro sistema de recomendación utiliza la librería <strong>Surprise</strong> para implementar un modelo basado en <strong>Singular Value Decomposition (SVD)</strong>. El flujo del sistema es el siguiente:</p>
+        <h2>Métricas de Evaluación</h2>
+        <table>
+            <tr>
+                <th>Modelo</th>
+                <th>n_factors</th>
+                <th>lr_all</th>
+                <th>reg_all</th>
+                <th>RMSE</th>
+                <th>MAE</th>
+                <th>Precision@10</th>
+                <th>Recall@10</th>
+            </tr>
+            <tr>
+                <td>Surprise2</td>
+                <td>50</td>
+                <td>0.01</td>
+                <td>0.1</td>
+                <td>0.4488</td>
+                <td>0.3981</td>
+                <td>0.1678</td>
+                <td>0.7379</td>
+            </tr>
+            <tr>
+                <td>Surprise3 (GridSearch)</td>
+                <td>50</td>
+                <td>0.01</td>
+                <td>0.1</td>
+                <td>0.4496</td>
+                <td>0.3986</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Surprise4</td>
+                <td>150</td>
+                <td>0.01</td>
+                <td>0.1</td>
+                <td>0.5629</td>
+                <td>0.4863</td>
+                <td>0.6833</td>
+                <td>0.7662</td>
+            </tr>
+            <tr>
+                <td>Surprise1</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>0.4499</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </table>
+
+        <h2>Recomendaciones por Modelo</h2>
+        <h3>Surprise2</h3>
+        <p class="recommendations">['water seltzer sparkling water', 'milk', 'eggs', 'yogurt', 'fresh fruits', 'packaged produce', 'cream', 'soy lactosefree', 'energy sports drinks', 'soft drinks']</p>
         
-        <h3>1. Carga y Preprocesamiento de Datos</h3>
-        <p>Se cargan los datos de productos y usuarios, asegurando que estén correctamente estructurados en el formato necesario para Surprise (usuario, ítem, rating).</p>
-
-        <h3>2. Entrenamiento del Modelo con SVD</h3>
-        <p>Se utiliza el algoritmo <strong>SVD</strong> para factorizar la matriz usuario-producto en representaciones de menor dimensión. 
-        Esto permite capturar patrones de preferencia implícita en los datos y mejorar la calidad de las recomendaciones.</p>
-
-        <h3>3. Optimización de Hiperparámetros</h3>
-        <p>Para mejorar la precisión del modelo, se realiza una búsqueda de hiperparámetros, ajustando valores como:</p>
-        <ul>
-            <li><strong>n_factors:</strong> Número de dimensiones en la factoración de la matriz.</li>
-            <li><strong>n_epochs:</strong> Número de iteraciones en el entrenamiento.</li>
-            <li><strong>lr_all:</strong> Tasa de aprendizaje global del algoritmo.</li>
-            <li><strong>reg_all:</strong> Parámetro de regularización para evitar sobreajuste.</li>
-        </ul>
-
-        <h3>4. Evaluación con Métricas Explícitas</h3>
-        <p>Para medir la calidad del modelo, se utilizan métricas como:</p>
-        <ul>
-            <li><strong>RMSE (Root Mean Square Error):</strong> Evalúa la diferencia entre predicciones y valores reales.</li>
-            <li><strong>MAE (Mean Absolute Error):</strong> Mide el error absoluto promedio.</li>
-            <li><strong>Precision@10 y Recall@10:</strong> Evalúan qué tan bien se recomiendan productos relevantes.</li>
-        </ul>
-
-        <h3>5. Generación de Recomendaciones</h3>
-        <p>Una vez optimizado el modelo, se generan recomendaciones personalizadas para cada usuario, basadas en su historial de interacciones con los productos.</p>
+        <h3>Surprise3 (GridSearch)</h3>
+        <p class="recommendations">['water seltzer sparkling water', 'yogurt', 'milk', 'packaged produce', 'cream', 'fresh fruits', 'eggs', 'refrigerated', 'bread', 'soft drinks']</p>
+        
+        <h3>Surprise4</h3>
+        <p class="recommendations">['cream', 'eggs', 'water seltzer sparkling water', 'yogurt', 'fresh fruits', 'pickled goods olives', 'packaged poultry', 'fresh vegetables', 'packaged cheese', 'other creams cheeses']</p>
+        
+        <h3>Surprise1</h3>
+        <p class="recommendations">['milk', 'water seltzer sparkling water', 'packaged produce', 'yogurt', 'soft drinks', 'fresh fruits', 'soy lactosefree', 'cream', 'eggs', 'energy sports drinks']</p>
 
         <h2>Conclusiones</h2>
-        <p><strong>Importancia de las métricas seleccionadas:</strong><br>
-        <strong>RMSE:</strong> Evalúa la precisión del modelo, penalizando más los errores grandes.<br>
-        <strong>MAE:</strong> Mide el error absoluto promedio, proporcionando una interpretación más intuitiva.<br>
-        <strong>Precision@10:</strong> Indica la relevancia de las recomendaciones en el top 10.<br>
-        <strong>Recall@10:</strong> Evalúa qué tan bien el modelo recupera elementos relevantes.</p>
-
-        <p><strong>Análisis de cambios en las métricas:</strong><br>
-        La optimización de los hiperparámetros logró reducir el RMSE de 0.4507 a 0.4488, indicando una ligera mejora en la precisión de las predicciones. El MAE también mejoró al incorporar la optimización.
-        La adición de Precision@10 y Recall@10 en la tercera ejecución mostró que, aunque el modelo optimizado logró reducir errores, también mejoró la calidad de las recomendaciones con un recall significativo de 0.7406, indicando que una gran cantidad de productos relevantes están siendo correctamente recomendados.</p>
-
-        <p><strong>Análisis de cambios en las recomendaciones:</strong><br>
-        Se observa que las recomendaciones evolucionaron en cada optimización. En la primera ejecución, los productos eran más genéricos, como "milk" y "bread". Con la optimización de hiperparámetros, se incorporaron productos más específicos como "soy lactosefree" y "cream". Finalmente, en la tercera ejecución, se mejoró la diversidad de recomendaciones, incluyendo productos como "white wines", lo que indica una mejor adaptación a las preferencias del usuario.</p>
-        
+        <div class="conclusion">
+            <p><strong>1- Precisión vs Complejidad del Modelo:</strong><br>
+            Aunque el modelo con <strong>n_factors=150</strong> en Surprise4 tiene mayor recall, su error es significativamente mayor (RMSE de 0.5629 vs. 0.4488 en Surprise2). Esto sugiere que un mayor número de factores no siempre mejora la calidad de las recomendaciones.</p>
+            
+            <p><strong>2- Optimización de Parámetros:</strong><br>
+            El uso de GridSearch en Surprise3 resultó en valores de RMSE y MAE similares a los de Surprise2, lo que indica que el modelo ya estaba bien ajustado.</p>
+            
+            <p><strong>3- Variabilidad en las Recomendaciones:</strong><br>
+            Cada modelo sugiere productos ligeramente distintos, pero hay coincidencias en artículos clave como 'water seltzer sparkling water', 'yogurt', y 'milk', lo que demuestra la consistencia del sistema.</p>
+        </div>
+    </body>
+    </html>
+    

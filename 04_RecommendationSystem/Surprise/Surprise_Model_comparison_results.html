@@ -17,6 +17,35 @@
         <h1>Comparación de Modelos Surprise</h1>
         <p>Este reporte presenta la comparación de distintos modelos de recomendación utilizando la librería <strong>Surprise</strong>.</p>
         
+        <h2>Descripción del Sistema de Recomendación</h2>
+        <p>La librería <strong>Surprise</strong> (Simple Python Recommendation System Engine) está diseñada específicamente para construir y evaluar sistemas de recomendación. 
+        Es útil para generar recomendaciones personalizadas basadas en interacciones previas entre usuarios y productos. En este caso, Surprise es una excelente opción para recomendaciones de compras en supermercados, 
+        ya que permite modelar patrones de consumo y predecir productos de interés para cada usuario en función de sus compras anteriores.</p>
+        
+        <h2>Carga y Preprocesamiento de Datos</h2>
+        <p>Se cargan los datos de productos y usuarios, asegurando que estén correctamente estructurados y listos para ser utilizados en los modelos de recomendación.</p>
+        
+        <h2>Entrenamiento del Modelo</h2>
+        <p>Se evaluaron distintas configuraciones de hiperparámetros para entrenar los modelos de Surprise. En particular, se probaron diferentes combinaciones de <strong>n_factors, lr_all</strong> y <strong>reg_all</strong> para optimizar la calidad de las recomendaciones. 
+        Además, en el modelo Surprise4 se exploraron otras configuraciones para evaluar su impacto en el rendimiento del sistema.</p>
+        
+        <h2>Optimización de Hiperparámetros</h2>
+        <p>Para encontrar la mejor configuración de los modelos, se ajustaron los siguientes hiperparámetros:</p>
+        <ul>
+            <li><strong>n_factors:</strong> Dimensión de los factores latentes en el modelo de factorización de matrices.</li>
+            <li><strong>lr_all:</strong> Tasa de aprendizaje utilizada para optimizar el modelo.</li>
+            <li><strong>reg_all:</strong> Parámetro de regularización para evitar el sobreajuste.</li>
+        </ul>
+        
+        <h2>Evaluación con Métricas</h2>
+        <p>Se utilizaron varias métricas para evaluar el desempeño de los modelos:</p>
+        <ul>
+            <li><strong>RMSE (Root Mean Squared Error):</strong> Mide el error promedio de las predicciones, penalizando más los errores grandes.</li>
+            <li><strong>MAE (Mean Absolute Error):</strong> Indica el error promedio absoluto de las predicciones.</li>
+            <li><strong>Precision@10:</strong> Evalúa la proporción de productos relevantes dentro de las 10 primeras recomendaciones.</li>
+            <li><strong>Recall@10:</strong> Mide la capacidad del modelo para recuperar productos relevantes dentro del top 10.</li>
+        </ul>
+        
         <h2>Métricas de Evaluación</h2>
         <table>
             <tr>
@@ -70,31 +99,6 @@
                 <td>-</td>
             </tr>
         </table>
-
-        <h2>Recomendaciones por Modelo</h2>
-        <h3>Surprise2</h3>
-        <p class="recommendations">['water seltzer sparkling water', 'milk', 'eggs', 'yogurt', 'fresh fruits', 'packaged produce', 'cream', 'soy lactosefree', 'energy sports drinks', 'soft drinks']</p>
-        
-        <h3>Surprise3 (GridSearch)</h3>
-        <p class="recommendations">['water seltzer sparkling water', 'yogurt', 'milk', 'packaged produce', 'cream', 'fresh fruits', 'eggs', 'refrigerated', 'bread', 'soft drinks']</p>
-        
-        <h3>Surprise4</h3>
-        <p class="recommendations">['cream', 'eggs', 'water seltzer sparkling water', 'yogurt', 'fresh fruits', 'pickled goods olives', 'packaged poultry', 'fresh vegetables', 'packaged cheese', 'other creams cheeses']</p>
-        
-        <h3>Surprise1</h3>
-        <p class="recommendations">['milk', 'water seltzer sparkling water', 'packaged produce', 'yogurt', 'soft drinks', 'fresh fruits', 'soy lactosefree', 'cream', 'eggs', 'energy sports drinks']</p>
-
-        <h2>Conclusiones</h2>
-        <div class="conclusion">
-            <p><strong>1- Precisión vs Complejidad del Modelo:</strong><br>
-            Aunque el modelo con <strong>n_factors=150</strong> en Surprise4 tiene mayor recall, su error es significativamente mayor (RMSE de 0.5629 vs. 0.4488 en Surprise2). Esto sugiere que un mayor número de factores no siempre mejora la calidad de las recomendaciones.</p>
-            
-            <p><strong>2- Optimización de Parámetros:</strong><br>
-            El uso de GridSearch en Surprise3 resultó en valores de RMSE y MAE similares a los de Surprise2, lo que indica que el modelo ya estaba bien ajustado.</p>
-            
-            <p><strong>3- Variabilidad en las Recomendaciones:</strong><br>
-            Cada modelo sugiere productos ligeramente distintos, pero hay coincidencias en artículos clave como 'water seltzer sparkling water', 'yogurt', y 'milk', lo que demuestra la consistencia del sistema.</p>
-        </div>
     </body>
     </html>
     

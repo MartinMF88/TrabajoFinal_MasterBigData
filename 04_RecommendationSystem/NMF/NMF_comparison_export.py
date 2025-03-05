@@ -77,10 +77,10 @@ def generate_nmf_comparison_html():
             El modelo optimizado logró una mayor precisión y un leve incremento en el recall, mejorando la relevancia de las recomendaciones.</p>
 
             <p><strong>2 - Reducción de RMSE:</strong><br>
-            Se observa una ligera mejora en el error cuadrático medio, indicando mejores predicciones.</p>
+            Se observa una mejora en el RMSE, reduciendolo a 2.9%, esto implica una mejora en las predicciones.</p>
 
             <p><strong>3 - Costo Computacional:</strong><br>
-            La optimización del modelo aumentó significativamente el tiempo de entrenamiento, lo cual es un factor a considerar en implementaciones en producción.</p>
+            La optimización del modelo duplico el tiempo de entrenamiento, esto era esperable ya que duplico la cantidad de componentes de 50 a 100.</p>
         </div>
     </body>
     </html>

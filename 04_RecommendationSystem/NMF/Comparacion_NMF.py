@@ -92,3 +92,7 @@ axes[2].set_ylabel('Score')
 plt.tight_layout()
 plt.show()
 
+# Save results to CSV for the HTML report
+results_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\nmf_results.csv"
+results_df.to_csv(results_path, index=False)
+print(f"✅ Resultados guardados en: {results_path}")

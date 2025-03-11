@@ -3,7 +3,7 @@ import pandas as pd
 
 def generate_nmf_comparison_html():
     # Load results from Comparacion_NMF.py output
-    results_path = r"C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\nmf_results.csv"
+    results_path = r"C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\NMF_Balanced\\nmf_results_balanced.csv"
     
     try:
         results_df = pd.read_csv(results_path)
@@ -86,7 +86,7 @@ def generate_nmf_comparison_html():
     </html>
     """
     
-    save_path = r"C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\NMF_Comparison_Report.html"
+    save_path = r"C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\NMF_Balanced\\NMF_Comparison_Report_balanced.html"
     
     try:
         with open(save_path, 'w', encoding='utf-8') as f:

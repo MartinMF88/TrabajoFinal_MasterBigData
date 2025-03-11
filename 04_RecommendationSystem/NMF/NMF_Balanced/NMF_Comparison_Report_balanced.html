@@ -1,0 +1,74 @@
+
+    <html>
+    <head>
+        <title>Comparación de Modelos NMF</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; background-color: #f8f9fa; }
+            h1, h2, h3 { color: #333; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+            th { background-color: #007bff; color: white; }
+            tr:nth-child(even) { background-color: #f2f2f2; }
+            .conclusion { margin-top: 20px; padding: 15px; background: white; }
+        </style>
+    </head>
+    <body>
+        <h1>Comparación de Modelos NMF</h1>
+        <p>Este reporte compara dos modelos de descomposición en valores no negativos (NMF), evaluando métricas clave.</p>
+        
+        <h2>Descripción del Sistema de Recomendación</h2>
+        <p>Este sistema de recomendación utiliza <strong>NMF</strong> para factorizar la matriz usuario-producto en representaciones latentes.</p>
+        
+        <h3>1. Carga y Preprocesamiento de Datos</h3>
+        <p>Se construye la matriz de interacciones usuario-producto a partir de datos de compras.</p>
+        
+        <h3>2. Entrenamiento del Modelo NMF</h3>
+        <p>Se comparan dos configuraciones:</p>
+        <ul>
+            <li><strong>NMF (Baseline):</strong> 50 componentes, inicialización aleatoria.</li>
+            <li><strong>NMF2 (Optimized):</strong> 100 componentes, inicialización avanzada, solver 'mu'.</li>
+        </ul>
+        
+        <h2>Métricas de Evaluación</h2>
+        <table>
+            <tr>
+                <th>Métrica</th>
+                <th>NMF (Baseline)</th>
+                <th>NMF2 (Optimized)</th>
+            </tr>
+            <tr>
+                <td>RMSE</td>
+                <td>0.0820</td>
+                <td>0.0457</td>
+            </tr>
+            <tr>
+                <td>Precision@5</td>
+                <td>0.4062</td>
+                <td>0.5197</td>
+            </tr>
+            <tr>
+                <td>Recall@5</td>
+                <td>0.6839</td>
+                <td>0.9280</td>
+            </tr>
+            <tr>
+                <td>Tiempo de Entrenamiento (s)</td>
+                <td>68.14</td>
+                <td>30.70</td>
+            </tr>
+        </table>
+
+        <h2>Conclusiones</h2>
+        <div class="conclusion">
+            <p><strong>1 - Mejora en Precision y Recall:</strong><br>
+            El modelo optimizado logró una mayor precisión y un leve incremento en el recall, mejorando la relevancia de las recomendaciones.</p>
+
+            <p><strong>2 - Reducción de RMSE:</strong><br>
+            Se observa una mejora en el RMSE, reduciendolo a 2.9%, esto implica una mejora en las predicciones.</p>
+
+            <p><strong>3 - Costo Computacional:</strong><br>
+            La optimización del modelo duplico el tiempo de entrenamiento, esto era esperable ya que duplico la cantidad de componentes de 50 a 100.</p>
+        </div>
+    </body>
+    </html>
+    

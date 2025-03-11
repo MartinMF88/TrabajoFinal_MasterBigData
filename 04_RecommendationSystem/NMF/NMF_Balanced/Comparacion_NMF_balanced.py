@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # Load dataset
-file_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\00_Data_Bases\\Cluster5_1_items.csv"
+file_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\00_Data_Bases\\Cluster5_1_balanced.csv"
 df = pd.read_csv(file_path)
 
 # Prepare the user-item interaction matrix
@@ -93,6 +93,6 @@ plt.tight_layout()
 plt.show()
 
 # Save results to CSV for the HTML report
-results_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\nmf_results.csv"
+results_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\NMF_Balanced\\nmf_results_balanced.csv"
 results_df.to_csv(results_path, index=False)
 print(f"✅ Resultados guardados en: {results_path}")

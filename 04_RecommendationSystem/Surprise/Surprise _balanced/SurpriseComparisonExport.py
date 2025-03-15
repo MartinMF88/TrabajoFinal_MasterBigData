@@ -47,6 +47,7 @@ def generate_surprise_comparison_html():
             <li><strong>MAE (Mean Absolute Error):</strong> Indica el error promedio absoluto de las predicciones.</li>
             <li><strong>Precision@10:</strong> Evalúa la proporción de productos relevantes dentro de las 10 primeras recomendaciones.</li>
             <li><strong>Recall@10:</strong> Mide la capacidad del modelo para recuperar productos relevantes dentro del top 10.</li>
+            <li><strong>F1-score@10:</strong> Media armónica de Precision@10 y Recall@10.</li>
         </ul>
         
         <h2>Métricas de Evaluación</h2>
@@ -60,6 +61,7 @@ def generate_surprise_comparison_html():
                 <th>MAE</th>
                 <th>Precision@10</th>
                 <th>Recall@10</th>
+                <th>F1-score@10</th>
             </tr>
             <tr>
                 <td>Surprise2</td>
@@ -70,6 +72,7 @@ def generate_surprise_comparison_html():
                 <td>0.3981</td>
                 <td>0.1678</td>
                 <td>0.7379</td>
+                <td>0.2734</td>
             </tr>
             <tr>
                 <td>Surprise3 (GridSearch)</td>
@@ -78,6 +81,7 @@ def generate_surprise_comparison_html():
                 <td>0.1</td>
                 <td>0.4496</td>
                 <td>0.3986</td>
+                <td>-</td>
                 <td>-</td>
                 <td>-</td>
             </tr>
@@ -90,6 +94,7 @@ def generate_surprise_comparison_html():
                 <td>0.4863</td>
                 <td>0.6833</td>
                 <td>0.7662</td>
+                <td>0.7229</td>
             </tr>
             <tr>
                 <td>Surprise1</td>
@@ -97,6 +102,7 @@ def generate_surprise_comparison_html():
                 <td>-</td>
                 <td>-</td>
                 <td>0.4499</td>
+                <td>-</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>

@@ -1,9 +1,10 @@
 import zipfile
 import pandas as pd
 from surprise import SVD, Dataset, Reader
-from surprise.model_selection import train_test_split, GridSearchCV
+from surprise.model_selection import train_test_split
 from surprise import accuracy
 from collections import defaultdict
+from sklearn.metrics import precision_recall_fscore_support
 
 # --- PASO 1: Cargar los datos ---
 zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_balanced.zip"
@@ -17,7 +18,7 @@ with zipfile.ZipFile(zip_path, 'r') as z:
 reader = Reader(rating_scale=(0, 1))  # Como 'reordered' es binario (0 o 1)
 data = Dataset.load_from_df(df[['user_id', 'product_id', 'reordered']], reader)
 
-# --- PASO 3: Dividir los datos en entrenamiento y prueba ----
+# --- PASO 3: Dividir los datos en entrenamiento y prueba ---
 trainset, testset = train_test_split(data, test_size=0.2)
 
 # --- PASO 4: Entrenar el modelo SVD ---
@@ -27,6 +28,17 @@ model.fit(trainset)
 # --- PASO 5: Evaluar el modelo en el conjunto de prueba ---
 predictions = model.test(testset)
 rmse = accuracy.rmse(predictions)
+
+# Convert predictions to binary values
+y_true = [pred.r_ui for pred in predictions]  # Valores reales
+y_pred = [1 if pred.est >= 0.5 else 0 for pred in predictions]  # Predicciones binarias
+
+# Calcular Precision, Recall y F1-score
+precision, recall, f1, _ = precision_recall_fscore_support(y_true, y_pred, average='binary')
+
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1-score: {f1:.4f}")
 
 # --- PASO 6: Generar recomendaciones para un usuario específico ---
 user_id = 0  # Puedes cambiar el usuario de prueba

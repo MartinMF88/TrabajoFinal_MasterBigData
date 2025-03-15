@@ -33,7 +33,7 @@ param_grid = {
     'reg_all': [0.03, 0.07, 0.1]
 }
 
-gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3, n_jobs=-1)  # Reducido cv a 3
+gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3, n_jobs=-1)
 gs.fit(data)
 
 # Obtener los mejores parámetros
@@ -53,42 +53,54 @@ predictions = model.test(testset)
 rmse = accuracy.rmse(predictions)
 mae = accuracy.mae(predictions)
 
-def precision_recall_at_k(predictions, k=10, threshold=0.5):
+# --- PASO 8: Evaluación con Precision@K, Recall@K y F1-score ---
+def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
     user_est_true = defaultdict(list)
     for uid, iid, true_r, est, _ in predictions:
         user_est_true[uid].append((est, true_r))
 
-    precisions, recalls = [], []
+    precisions, recalls, f1_scores = [], [], []
+    
     for uid, user_ratings in user_est_true.items():
         user_ratings.sort(reverse=True, key=lambda x: x[0])
         top_k = user_ratings[:k]
+
         num_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings)
         num_recommended_relevant = sum((true_r >= threshold) for (_, true_r) in top_k)
-        precisions.append(num_recommended_relevant / k)
-        recalls.append(num_recommended_relevant / num_relevant if num_relevant != 0 else 0)
+
+        precision = num_recommended_relevant / k
+        recall = num_recommended_relevant / num_relevant if num_relevant != 0 else 0
+        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+
+        precisions.append(precision)
+        recalls.append(recall)
+        f1_scores.append(f1)
 
     avg_precision = sum(precisions) / len(precisions)
     avg_recall = sum(recalls) / len(recalls)
+    avg_f1 = sum(f1_scores) / len(f1_scores)
 
     print(f'Precision@{k}: {avg_precision:.4f}')
     print(f'Recall@{k}: {avg_recall:.4f}')
+    print(f'F1-score@{k}: {avg_f1:.4f}')
 
-precision_recall_at_k(predictions, k=10)
+# Llamar a la función para evaluación
+precision_recall_f1_at_k(predictions, k=10)
 
-# --- PASO 8: Generar recomendaciones para un usuario específico ---
+# --- PASO 9: Generar recomendaciones para un usuario específico ---
 user_id = 0  # Puedes cambiarlo
 all_products = df['product_id'].unique()
 predictions = [(item, model.predict(user_id, item).est) for item in all_products]
 predictions.sort(key=lambda x: x[1], reverse=True)
 
-# --- PASO 9: Mapear los IDs de productos a nombres ---
+# --- PASO 10: Mapear los IDs de productos a nombres ---
 product_mapping = df[['product_id', 'product_name']].drop_duplicates().set_index('product_id')['product_name']
 top_recommendations = [product_mapping.get(item[0], "Producto Desconocido") for item in predictions[:10]]
 
 print("\nRecomendaciones para el usuario 0:")
 print(top_recommendations)
 
-# --- PASO 10: Mostrar métricas finales ---
+# --- PASO 11: Mostrar métricas finales ---
 print("\n--- MÉTRICAS DE EVALUACIÓN ---")
 print(f"RMSE: {rmse:.4f}")
 print(f"MAE: {mae:.4f}")

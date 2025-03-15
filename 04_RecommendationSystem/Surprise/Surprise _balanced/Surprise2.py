@@ -4,6 +4,7 @@ from surprise import SVD, Dataset, Reader
 from surprise.model_selection import train_test_split, GridSearchCV
 from surprise import accuracy
 from collections import defaultdict
+from sklearn.metrics import precision_recall_fscore_support
 
 # --- PASO 1: Cargar los datos ---
 zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_balanced.zip"
@@ -46,36 +47,39 @@ mae = accuracy.mae(predictions)
 print(f"RMSE: {rmse}")
 print(f"MAE: {mae}")
 
-# --- PASO 7: Evaluación con Precision@K y Recall@K ---
-def precision_recall_at_k(predictions, k=10, threshold=0.5):
-    # Crear un diccionario de usuario -> (predicción, verdadero valor)
+# --- PASO 7: Evaluación con Precision@K, Recall@K y F1-score ---
+def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
     user_est_true = defaultdict(list)
     for uid, iid, true_r, est, _ in predictions:
         user_est_true[uid].append((est, true_r))
 
-    precisions, recalls = [], []
+    precisions, recalls, f1_scores = [], [], []
+    
     for uid, user_ratings in user_est_true.items():
-        # Ordenar por la puntuación estimada de mayor a menor
         user_ratings.sort(reverse=True, key=lambda x: x[0])
         top_k = user_ratings[:k]
 
-        # Contar cuántos de los productos recomendados son relevantes (reordenados)
         num_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings)
         num_recommended_relevant = sum((true_r >= threshold) for (_, true_r) in top_k)
 
-        # Calcular precisión y recall
-        precisions.append(num_recommended_relevant / k)
-        recalls.append(num_recommended_relevant / num_relevant if num_relevant != 0 else 0)
+        precision = num_recommended_relevant / k
+        recall = num_recommended_relevant / num_relevant if num_relevant != 0 else 0
+        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
-    # Promediar precisión y recall
+        precisions.append(precision)
+        recalls.append(recall)
+        f1_scores.append(f1)
+
     avg_precision = sum(precisions) / len(precisions)
     avg_recall = sum(recalls) / len(recalls)
+    avg_f1 = sum(f1_scores) / len(f1_scores)
 
     print(f'Precision@{k}: {avg_precision:.4f}')
     print(f'Recall@{k}: {avg_recall:.4f}')
+    print(f'F1-score@{k}: {avg_f1:.4f}')
 
 # Llamar a la función para evaluación
-precision_recall_at_k(predictions, k=10)
+precision_recall_f1_at_k(predictions, k=10)
 
 # --- PASO 8: Generar recomendaciones para un usuario específico ---
 user_id = 0  # Puedes cambiarlo por otro usuario

@@ -65,9 +65,14 @@ def generate_nmf_comparison_html():
                 <td>{results_df.iloc[1, 3]:.4f}</td>
             </tr>
             <tr>
+                <td><strong>F1-score</strong></td>
+                <td><strong>{results_df.iloc[0, 4]:.4f}</strong></td>
+                <td><strong>{results_df.iloc[1, 4]:.4f}</strong></td>
+            </tr>
+            <tr>
                 <td>Tiempo de Entrenamiento (s)</td>
-                <td>{results_df.iloc[0, 4]:.2f}</td>
-                <td>{results_df.iloc[1, 4]:.2f}</td>
+                <td>{results_df.iloc[0, 5]:.2f}</td>
+                <td>{results_df.iloc[1, 5]:.2f}</td>
             </tr>
         </table>
 
@@ -77,10 +82,13 @@ def generate_nmf_comparison_html():
             El modelo optimizado logró una mayor precisión y un leve incremento en el recall, mejorando la relevancia de las recomendaciones.</p>
 
             <p><strong>2 - Reducción de RMSE:</strong><br>
-            Se observa una mejora en el RMSE, reduciendolo a 2.9%, esto implica una mejora en las predicciones.</p>
+            Se observa una mejora en el RMSE, reduciéndolo a 2.9%, lo que implica una mejor calidad en las predicciones.</p>
 
-            <p><strong>3 - Costo Computacional:</strong><br>
-            La optimización del modelo duplico el tiempo de entrenamiento, esto era esperable ya que duplico la cantidad de componentes de 50 a 100.</p>
+            <p><strong>3 - Incorporación del F1-score:</strong><br>
+            El F1-score permite evaluar el balance entre precision y recall. En este caso, el modelo optimizado mantiene un mejor equilibrio.</p>
+
+            <p><strong>4 - Costo Computacional:</strong><br>
+            La optimización del modelo duplicó el tiempo de entrenamiento, lo que era esperable al aumentar la cantidad de componentes de 50 a 100.</p>
         </div>
     </body>
     </html>

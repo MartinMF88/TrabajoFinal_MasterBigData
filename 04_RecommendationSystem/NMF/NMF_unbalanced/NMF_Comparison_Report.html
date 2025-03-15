@@ -52,9 +52,14 @@
                 <td>0.8551</td>
             </tr>
             <tr>
+                <td><strong>F1-score</strong></td>
+                <td><strong>0.7207</strong></td>
+                <td><strong>0.7731</strong></td>
+            </tr>
+            <tr>
                 <td>Tiempo de Entrenamiento (s)</td>
-                <td>6.57</td>
-                <td>11.24</td>
+                <td>6.48</td>
+                <td>11.87</td>
             </tr>
         </table>
 
@@ -64,10 +69,13 @@
             El modelo optimizado logró una mayor precisión y un leve incremento en el recall, mejorando la relevancia de las recomendaciones.</p>
 
             <p><strong>2 - Reducción de RMSE:</strong><br>
-            Se observa una ligera mejora en el error cuadrático medio, indicando mejores predicciones.</p>
+            Se observa una mejora en el RMSE, reduciéndolo a 2.9%, lo que implica una mejor calidad en las predicciones.</p>
 
-            <p><strong>3 - Costo Computacional:</strong><br>
-            La optimización del modelo aumentó significativamente el tiempo de entrenamiento, lo cual es un factor a considerar en implementaciones en producción.</p>
+            <p><strong>3 - Incorporación del F1-score:</strong><br>
+            El F1-score permite evaluar el balance entre precisión y recall. En este caso, el modelo optimizado mantiene un mejor equilibrio.</p>
+
+            <p><strong>4 - Costo Computacional:</strong><br>
+            La optimización del modelo duplicó el tiempo de entrenamiento, lo que era esperable al aumentar la cantidad de componentes de 50 a 100.</p>
         </div>
     </body>
     </html>

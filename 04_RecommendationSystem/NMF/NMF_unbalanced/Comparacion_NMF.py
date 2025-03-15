@@ -53,11 +53,19 @@ def train_evaluate_nmf(n_components, init, solver, beta_loss, max_iter, random_s
             precisions.append(hits / k)
             recalls.append(hits / len(actual_purchases))
         
-        return np.mean(precisions), np.mean(recalls)
-    
+        precision = np.mean(precisions)
+        recall = np.mean(recalls)
+        return precision, recall
+
     precision_at_5, recall_at_5 = precision_recall_at_k(nmf_model, test_sparse, k=5)
     
-    return model_name, rmse, precision_at_5, recall_at_5, train_time
+    # Compute F1-score
+    if precision_at_5 + recall_at_5 > 0:
+        f1_score = 2 * (precision_at_5 * recall_at_5) / (precision_at_5 + recall_at_5)
+    else:
+        f1_score = 0.0
+
+    return model_name, rmse, precision_at_5, recall_at_5, f1_score, train_time
 
 # Train and compare models
 models = [
@@ -68,11 +76,11 @@ models = [
 results = [train_evaluate_nmf(*params) for params in models]
 
 # Convert results to DataFrame
-results_df = pd.DataFrame(results, columns=['Model', 'RMSE', 'Precision@5', 'Recall@5', 'Training Time'])
+results_df = pd.DataFrame(results, columns=['Model', 'RMSE', 'Precision@5', 'Recall@5', 'F1-score', 'Training Time'])
 print(results_df)
 
 # Plot Comparison
-fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+fig, axes = plt.subplots(1, 4, figsize=(20, 5))
 
 # RMSE
 axes[0].bar(results_df['Model'], results_df['RMSE'])
@@ -89,6 +97,11 @@ axes[2].bar(results_df['Model'], results_df['Recall@5'])
 axes[2].set_title('Recall@5 Comparison')
 axes[2].set_ylabel('Score')
 
+# F1-score
+axes[3].bar(results_df['Model'], results_df['F1-score'])
+axes[3].set_title('F1-score Comparison')
+axes[3].set_ylabel('Score')
+
 plt.tight_layout()
 plt.show()
 
@@ -96,3 +109,4 @@ plt.show()
 results_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\NMF_unbalanced\\nmf_results.csv"
 results_df.to_csv(results_path, index=False)
 print(f"✅ Resultados guardados en: {results_path}")
+

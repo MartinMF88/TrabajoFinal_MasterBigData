@@ -5,3 +5,5 @@
 04_Data_Bases/.venv/
 00_Data_Bases/Cluster5_1_items.csv
 00_Data_Bases/Cluster5_1_balanced.csv
+04_RecommendationSystem\Tensor_Flow_Recommender\TFR_Balanced\Results_Balanced.csv
+04_RecommendationSystem\Tensor_Flow_Recommender\TFR_Unbalanced\Results_Unbalanced.csv

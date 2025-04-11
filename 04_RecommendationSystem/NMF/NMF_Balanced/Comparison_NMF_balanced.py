@@ -70,7 +70,7 @@ def train_evaluate_nmf(n_components, init, solver, beta_loss, max_iter, random_s
 # Train and compare models
 models = [
     (50, 'random', 'cd', 'frobenius', 200, 42, 'NMF (Baseline)'),
-    (100, 'nndsvda', 'mu', 'kullback-leibler', 500, 42, 'NMF2 (Optimized)')
+    (100, 'nndsvda', 'mu', 'kullback-leibler', 300, 42, 'NMF2 (Optimized)')
 ]
 
 results = [train_evaluate_nmf(*params) for params in models]

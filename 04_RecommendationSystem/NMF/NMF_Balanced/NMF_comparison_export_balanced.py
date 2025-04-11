@@ -78,17 +78,17 @@ def generate_nmf_comparison_html():
 
         <h2>Conclusiones</h2>
         <div class="conclusion">
-            <p><strong>1 - Mejora en Precision y Recall:</strong><br>
-            El modelo optimizado logró una mayor precisión y un leve incremento en el recall, mejorando la relevancia de las recomendaciones.</p>
+            <p><strong>1 - Mejora notable en Precision y Recall:</strong><br>
+            El modelo optimizado superó ampliamente al baseline, con una precisión del 51.97% y un recall del 92.80%, lo que indica que no solo recomienda mejor, sino que también recomienda más productos relevantes para los usuarios.</p>
 
-            <p><strong>2 - Reducción de RMSE:</strong><br>
-            Se observa una mejora en el RMSE, reduciéndolo a 2.9%, lo que implica una mejor calidad en las predicciones.</p>
+            <p><strong>2 - Reducción significativa del RMSE:</strong><br>
+            El RMSE se redujo de 0.0820 a 0.0457, lo que representa una mejora superior al 44% en la capacidad del modelo para predecir correctamente.</p>
 
-            <p><strong>3 - Incorporación del F1-score:</strong><br>
-            El F1-score permite evaluar el balance entre precision y recall. En este caso, el modelo optimizado mantiene un mejor equilibrio.</p>
+            <p><strong>3 - Mayor equilibrio entre precisión y cobertura (F1-score):</strong><br>
+            El F1-score del modelo optimizado fue 0.6663 frente a 0.5096 en el baseline, reflejando un mejor balance entre acierto y cobertura en las recomendaciones.</p>
 
-            <p><strong>4 - Costo Computacional:</strong><br>
-            La optimización del modelo duplicó el tiempo de entrenamiento, lo que era esperable al aumentar la cantidad de componentes de 50 a 100.</p>
+            <p><strong>4 - Reducción del tiempo de entrenamiento:</strong><br>
+            A pesar de ser un modelo más preciso y complejo, el tiempo de entrenamiento se redujo a 26.91 segundos frente a los 67.29 del baseline, posiblemente por una mejor elección de hiperparámetros.</p>
         </div>
     </body>
     </html>
@@ -105,4 +105,5 @@ def generate_nmf_comparison_html():
     
     return html
 
+# Ejecutar
 generate_nmf_comparison_html()

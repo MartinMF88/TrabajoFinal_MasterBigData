@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 # Load dataset
-file_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\00_Data_Bases\\Cluster5_1_items.csv"
+file_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\00_Data_Bases\\Cluster5_1_balanced.csv"
 df = pd.read_csv(file_path)
 
 # Prepare the user-item interaction matrix
@@ -70,7 +70,7 @@ def train_evaluate_nmf(n_components, init, solver, beta_loss, max_iter, random_s
 # Train and compare models
 models = [
     (50, 'random', 'cd', 'frobenius', 200, 42, 'NMF (Baseline)'),
-    (100, 'nndsvda', 'mu', 'kullback-leibler', 500, 42, 'NMF2 (Optimized)')
+    (100, 'nndsvda', 'mu', 'kullback-leibler', 300, 42, 'NMF2 (Optimized)')
 ]
 
 results = [train_evaluate_nmf(*params) for params in models]
@@ -109,4 +109,3 @@ plt.show()
 results_path = "C:\\Users\\Matias\\Desktop\\TrabajoFinal_MasterBigData\\04_RecommendationSystem\\NMF\\NMF_unbalanced\\nmf_results.csv"
 results_df.to_csv(results_path, index=False)
 print(f"✅ Resultados guardados en: {results_path}")
-

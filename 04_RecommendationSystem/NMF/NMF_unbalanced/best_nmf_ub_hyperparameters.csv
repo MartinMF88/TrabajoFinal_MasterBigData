@@ -1,0 +1,12 @@
+,53
+Model,NMF_72
+RMSE,0.029088355172966353
+Precision@5,0.7055373665480427
+Recall@5,0.8550636928425036
+F1-score,0.7731372248517376
+Training Time,11.042608737945557
+n_components,100
+init,nndsvda
+solver,mu
+beta_loss,kullback-leibler
+max_iter,300

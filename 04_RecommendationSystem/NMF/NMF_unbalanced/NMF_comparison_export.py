@@ -79,16 +79,16 @@ def generate_nmf_comparison_html():
         <h2>Conclusiones</h2>
         <div class="conclusion">
             <p><strong>1 - Mejora en Precision y Recall:</strong><br>
-            El modelo optimizado logró una mayor precisión y un leve incremento en el recall, mejorando la relevancia de las recomendaciones.</p>
+            El modelo optimizado superó al baseline tanto en precisión como en recall, alcanzando valores de {results_df.iloc[1, 2]:.2%} y {results_df.iloc[1, 3]:.2%} respectivamente. Esto indica que el sistema recomienda con mayor relevancia los productos que los usuarios realmente compran.</p>
 
-            <p><strong>2 - Reducción de RMSE:</strong><br>
-            Se observa una mejora en el RMSE, reduciéndolo a 2.9%, lo que implica una mejor calidad en las predicciones.</p>
+            <p><strong>2 - Reducción significativa del RMSE:</strong><br>
+            El RMSE bajó de {results_df.iloc[0, 1]:.4f} a {results_df.iloc[1, 1]:.4f}, lo que representa una mejora notable en la capacidad del modelo para predecir correctamente.</p>
 
-            <p><strong>3 - Incorporación del F1-score:</strong><br>
-            El F1-score permite evaluar el balance entre precisión y recall. En este caso, el modelo optimizado mantiene un mejor equilibrio.</p>
+            <p><strong>3 - Incremento en el F1-score:</strong><br>
+            El F1-score del modelo optimizado fue de {results_df.iloc[1, 4]:.4f} frente a {results_df.iloc[0, 4]:.4f} del modelo base, lo que refleja un mejor balance entre precisión y recall.</p>
 
-            <p><strong>4 - Costo Computacional:</strong><br>
-            La optimización del modelo duplicó el tiempo de entrenamiento, lo que era esperable al aumentar la cantidad de componentes de 50 a 100.</p>
+            <p><strong>4 - Costo computacional mayor pero aceptable:</strong><br>
+            El tiempo de entrenamiento del modelo optimizado fue mayor ({results_df.iloc[1, 5]:.2f} segundos frente a {results_df.iloc[0, 5]:.2f}), pero sigue siendo razonable dada la mejora en rendimiento.</p>
         </div>
     </body>
     </html>

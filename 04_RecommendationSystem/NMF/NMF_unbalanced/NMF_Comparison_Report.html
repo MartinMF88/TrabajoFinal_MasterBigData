@@ -58,24 +58,24 @@
             </tr>
             <tr>
                 <td>Tiempo de Entrenamiento (s)</td>
-                <td>6.48</td>
-                <td>11.87</td>
+                <td>6.32</td>
+                <td>11.48</td>
             </tr>
         </table>
 
         <h2>Conclusiones</h2>
         <div class="conclusion">
             <p><strong>1 - Mejora en Precision y Recall:</strong><br>
-            El modelo optimizado logró una mayor precisión y un leve incremento en el recall, mejorando la relevancia de las recomendaciones.</p>
+            El modelo optimizado superó al baseline tanto en precisión como en recall, alcanzando valores de 70.55% y 85.51% respectivamente. Esto indica que el sistema recomienda con mayor relevancia los productos que los usuarios realmente compran.</p>
 
-            <p><strong>2 - Reducción de RMSE:</strong><br>
-            Se observa una mejora en el RMSE, reduciéndolo a 2.9%, lo que implica una mejor calidad en las predicciones.</p>
+            <p><strong>2 - Reducción significativa del RMSE:</strong><br>
+            El RMSE bajó de 0.0652 a 0.0291, lo que representa una mejora notable en la capacidad del modelo para predecir correctamente.</p>
 
-            <p><strong>3 - Incorporación del F1-score:</strong><br>
-            El F1-score permite evaluar el balance entre precisión y recall. En este caso, el modelo optimizado mantiene un mejor equilibrio.</p>
+            <p><strong>3 - Incremento en el F1-score:</strong><br>
+            El F1-score del modelo optimizado fue de 0.7731 frente a 0.7207 del modelo base, lo que refleja un mejor balance entre precisión y recall.</p>
 
-            <p><strong>4 - Costo Computacional:</strong><br>
-            La optimización del modelo duplicó el tiempo de entrenamiento, lo que era esperable al aumentar la cantidad de componentes de 50 a 100.</p>
+            <p><strong>4 - Costo computacional mayor pero aceptable:</strong><br>
+            El tiempo de entrenamiento del modelo optimizado fue mayor (11.48 segundos frente a 6.32), pero sigue siendo razonable dada la mejora en rendimiento.</p>
         </div>
     </body>
     </html>

@@ -58,7 +58,7 @@ top_recommendations = [product_mapping[item[0]] for item in predictions[:10]]
 print("\nRecomendaciones para el usuario 0:")
 print(top_recommendations)
 
-
+#Exportar Datos a csv
 def save_results(model_name, rmse, precision, recall, f1, file_path):
 
     headers = ['Model Name', 'RMSE', 'Precision', 'Recall', 'F1-score']

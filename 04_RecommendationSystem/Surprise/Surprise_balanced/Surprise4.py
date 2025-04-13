@@ -6,6 +6,8 @@ from surprise import accuracy
 from collections import defaultdict
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
+import csv
 
 # --- PASO 1: Cargar los datos ---
 zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_balanced.zip"
@@ -60,7 +62,7 @@ def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
         user_est_true[uid].append((est, true_r))
 
     precisions, recalls, f1_scores = [], [], []
-    
+
     for uid, user_ratings in user_est_true.items():
         user_ratings.sort(reverse=True, key=lambda x: x[0])
         top_k = user_ratings[:k]
@@ -84,23 +86,34 @@ def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
     print(f'Recall@{k}: {avg_recall:.4f}')
     print(f'F1-score@{k}: {avg_f1:.4f}')
 
-# Llamar a la función para evaluación
-precision_recall_f1_at_k(predictions, k=10)
+    return avg_precision, avg_recall, avg_f1
 
-# --- PASO 9: Generar recomendaciones para un usuario específico ---
-user_id = 0  # Puedes cambiarlo
-all_products = df['product_id'].unique()
-predictions = [(item, model.predict(user_id, item).est) for item in all_products]
-predictions.sort(key=lambda x: x[1], reverse=True)
+# Capturamos las métricas
+precision, recall, f1_score = precision_recall_f1_at_k(predictions, k=10)
 
-# --- PASO 10: Mapear los IDs de productos a nombres ---
-product_mapping = df[['product_id', 'product_name']].drop_duplicates().set_index('product_id')['product_name']
-top_recommendations = [product_mapping.get(item[0], "Producto Desconocido") for item in predictions[:10]]
+# --- PASO 9: Exportar resultados a CSV ---
+def save_results(model_name, rmse, precision, recall, f1_score, file_path):
+    headers = ['Model Name', 'RMSE', 'Precision', 'Recall', 'F1-score']
+    data = [model_name, rmse, precision, recall, f1_score]
 
-print("\nRecomendaciones para el usuario 0:")
-print(top_recommendations)
+    file_exists = os.path.isfile(file_path)
 
-# --- PASO 11: Mostrar métricas finales ---
-print("\n--- MÉTRICAS DE EVALUACIÓN ---")
-print(f"RMSE: {rmse:.4f}")
-print(f"MAE: {mae:.4f}")
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(headers)
+        writer.writerow(data)
+
+results_file = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_balanced\surprise_results_balanced.csv"
+model_name = 'Surprise4'
+
+# Usar 'f1_score' en lugar de 'f1'
+save_results(model_name, rmse, precision, recall, f1_score, results_file)
+
+# --- PASO 10: Exportar métricas a Excel ---
+metrics_df = pd.DataFrame({
+    'Métrica': ['RMSE', 'MAE', 'Precision@10', 'Recall@10', 'F1-score@10'],
+    'Valor': [rmse, mae, precision, recall, f1_score]
+})
+
+metrics_df.to_excel('metricas_modelo_SVD.xlsx', index=False)

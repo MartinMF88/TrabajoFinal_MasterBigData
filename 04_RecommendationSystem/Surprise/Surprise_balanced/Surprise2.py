@@ -4,7 +4,8 @@ from surprise import SVD, Dataset, Reader
 from surprise.model_selection import train_test_split, GridSearchCV
 from surprise import accuracy
 from collections import defaultdict
-from sklearn.metrics import precision_recall_fscore_support
+import os
+import csv
 
 # --- PASO 1: Cargar los datos ---
 zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_balanced.zip"
@@ -28,7 +29,6 @@ param_grid = {
 gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3, n_jobs=-1)
 gs.fit(data)
 
-# Obtener los mejores parámetros
 best_params = gs.best_params['rmse']
 print("Mejores parámetros encontrados:", best_params)
 
@@ -54,7 +54,7 @@ def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
         user_est_true[uid].append((est, true_r))
 
     precisions, recalls, f1_scores = [], [], []
-    
+
     for uid, user_ratings in user_est_true.items():
         user_ratings.sort(reverse=True, key=lambda x: x[0])
         top_k = user_ratings[:k]
@@ -78,25 +78,39 @@ def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
     print(f'Recall@{k}: {avg_recall:.4f}')
     print(f'F1-score@{k}: {avg_f1:.4f}')
 
-# Llamar a la función para evaluación
-precision_recall_f1_at_k(predictions, k=10)
+    return avg_precision, avg_recall, avg_f1
+
+# Llamar a la función y guardar los valores de retorno
+precision, recall, f1 = precision_recall_f1_at_k(predictions, k=10)
 
 # --- PASO 8: Generar recomendaciones para un usuario específico ---
-user_id = 0  # Puedes cambiarlo por otro usuario
+user_id = 0  # Cambiar por el usuario deseado
 
-# Obtener todos los productos únicos
 all_products = df['product_id'].unique()
 
-# Predecir la puntuación para cada producto
 predictions = [(item, model.predict(user_id, item).est) for item in all_products]
-
-# Ordenar los productos por puntuación de recomendación
 predictions.sort(key=lambda x: x[1], reverse=True)
 
-# --- PASO 9: Mapear los IDs de productos a nombres ---
-product_mapping = df[['product_id', 'product_name']].drop_duplicates().set_index('product_id')['product_name']
+product_mapping = df.drop_duplicates(subset='product_id').set_index('product_id')['product_name']
 
-# Mostrar las 10 mejores recomendaciones
-top_recommendations = [product_mapping[item[0]] for item in predictions[:10]]
+top_recommendations = [product_mapping.get(item[0], 'Producto desconocido') for item in predictions[:10]]
 print("\nRecomendaciones para el usuario 0:")
 print(top_recommendations)
+
+# --- PASO 9: Exportar resultados a CSV ---
+def save_results(model_name, rmse, precision, recall, f1, file_path):
+    headers = ['Model Name', 'RMSE', 'Precision', 'Recall', 'F1-score']
+    data = [model_name, rmse, precision, recall, f1]
+
+    file_exists = os.path.isfile(file_path)
+
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(headers)
+        writer.writerow(data)
+
+results_file = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_balanced\surprise_results_balanced.csv"
+model_name = 'Surprise2'
+
+save_results(model_name, rmse, precision, recall, f1, results_file)

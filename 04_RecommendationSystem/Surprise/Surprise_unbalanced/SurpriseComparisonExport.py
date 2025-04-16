@@ -44,68 +44,65 @@ def generate_surprise_comparison_html():
         <p>Se utilizaron varias métricas para evaluar el desempeño de los modelos:</p>
         <ul>
             <li><strong>RMSE (Root Mean Squared Error):</strong> Mide el error promedio de las predicciones, penalizando más los errores grandes.</li>
-            <li><strong>MAE (Mean Absolute Error):</strong> Indica el error promedio absoluto de las predicciones.</li>
             <li><strong>Precision@10:</strong> Evalúa la proporción de productos relevantes dentro de las 10 primeras recomendaciones.</li>
             <li><strong>Recall@10:</strong> Mide la capacidad del modelo para recuperar productos relevantes dentro del top 10.</li>
+            <li><strong>F1-score:</strong> Es la media armónica entre la precisión y el recall, proporcionando un balance entre ambos.</li>
         </ul>
         
         <h2>Métricas de Evaluación</h2>
         <table>
             <tr>
                 <th>Modelo</th>
-                <th>n_factors</th>
-                <th>lr_all</th>
-                <th>reg_all</th>
                 <th>RMSE</th>
-                <th>MAE</th>
                 <th>Precision@10</th>
                 <th>Recall@10</th>
-            </tr>
-            <tr>
-                <td>Surprise2</td>
-                <td>50</td>
-                <td>0.01</td>
-                <td>0.1</td>
-                <td>0.4488</td>
-                <td>0.3981</td>
-                <td>0.1678</td>
-                <td>0.7379</td>
-            </tr>
-            <tr>
-                <td>Surprise3 (GridSearch)</td>
-                <td>50</td>
-                <td>0.01</td>
-                <td>0.1</td>
-                <td>0.4496</td>
-                <td>0.3986</td>
-                <td>-</td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>Surprise4</td>
-                <td>150</td>
-                <td>0.01</td>
-                <td>0.1</td>
-                <td>0.5629</td>
-                <td>0.4863</td>
-                <td>0.6833</td>
-                <td>0.7662</td>
+                <th>F1-score</th>
             </tr>
             <tr>
                 <td>Surprise1</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <td>0.4500</td>
+                <td>0.6838</td>
+                <td>0.7539</td>
+                <td>0.7171</td>
+            </tr>
+            <tr>
+                <td>Surprise2</td>
+                <td>0.4492</td>
+                <td>0.1680</td>
+                <td>0.7376</td>
+                <td>0.2536</td>
+            </tr>
+            <tr>
+                <td>Surprise3</td>
                 <td>0.4499</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <td>0.1678</td>
+                <td>0.7394</td>
+                <td>0.2535</td>
+            </tr>
+            <tr>
+                <td>Surprise4</td>
+                <td>0.5629</td>
+                <td>0.6834</td>
+                <td>0.7663</td>
+                <td>0.6236</td>
             </tr>
         </table>
+
+        <div class="conclusion">
+            <h2>Conclusión</h2>
+            <p>Los resultados obtenidos muestran que:</p>
+            <ul>
+                <li><strong>Surprise2</strong> presenta el mejor RMSE, pero su rendimiento en métricas de recomendación como precisión y F1-score es bajo.</li>
+                <li><strong>Surprise1</strong> logra el mejor equilibrio entre error de predicción y calidad de recomendaciones, con un alto F1-score (0.7171).</li>
+                <li><strong>Surprise4</strong>, a pesar de tener el peor RMSE, muestra buenos resultados en precisión y recall, con un F1-score de 0.6236.</li>
+                <li><strong>Surprise3</strong> es similar a Surprise2, con buen RMSE pero pobre rendimiento en precisión y F1-score.</li>
+            </ul>
+            <p>En resumen, si se prioriza la precisión y calidad de la recomendación, <strong>Surprise1</strong> es el modelo más adecuado. Sin embargo, si se busca minimizar el error de predicción, <strong>Surprise2</strong> o <strong>Surprise3</strong> serían alternativas viables, aunque con menor calidad en las recomendaciones.</p>
+        </div>
     </body>
     </html>
     """
-    
+
     save_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_unbalanced\Surprise_Model_Comparison_Results.html"
     
     try:

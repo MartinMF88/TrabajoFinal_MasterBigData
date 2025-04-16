@@ -4,6 +4,9 @@ from surprise import SVD, Dataset, Reader
 from surprise.model_selection import train_test_split, GridSearchCV
 from surprise import accuracy
 from collections import defaultdict
+import os
+import csv
+
 
 # --- PASO 1: Cargar los datos ---
 zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_items.zip"
@@ -27,7 +30,6 @@ param_grid = {
 gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3, n_jobs=-1)
 gs.fit(data)
 
-# Obtener los mejores parámetros
 best_params = gs.best_params['rmse']
 print("Mejores parámetros encontrados:", best_params)
 
@@ -46,53 +48,70 @@ mae = accuracy.mae(predictions)
 print(f"RMSE: {rmse}")
 print(f"MAE: {mae}")
 
-# --- PASO 7: Evaluación con Precision@K y Recall@K ---
-def precision_recall_at_k(predictions, k=10, threshold=0.5):
-    # Crear un diccionario de usuario -> (predicción, verdadero valor)
+# --- PASO 7: Evaluación con Precision@K, Recall@K y F1-score ---
+def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
     user_est_true = defaultdict(list)
     for uid, iid, true_r, est, _ in predictions:
         user_est_true[uid].append((est, true_r))
 
-    precisions, recalls = [], []
+    precisions, recalls, f1_scores = [], [], []
+
     for uid, user_ratings in user_est_true.items():
-        # Ordenar por la puntuación estimada de mayor a menor
         user_ratings.sort(reverse=True, key=lambda x: x[0])
         top_k = user_ratings[:k]
 
-        # Contar cuántos de los productos recomendados son relevantes (reordenados)
         num_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings)
         num_recommended_relevant = sum((true_r >= threshold) for (_, true_r) in top_k)
 
-        # Calcular precisión y recall
-        precisions.append(num_recommended_relevant / k)
-        recalls.append(num_recommended_relevant / num_relevant if num_relevant != 0 else 0)
+        precision = num_recommended_relevant / k
+        recall = num_recommended_relevant / num_relevant if num_relevant != 0 else 0
+        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
-    # Promediar precisión y recall
+        precisions.append(precision)
+        recalls.append(recall)
+        f1_scores.append(f1)
+
     avg_precision = sum(precisions) / len(precisions)
     avg_recall = sum(recalls) / len(recalls)
+    avg_f1 = sum(f1_scores) / len(f1_scores)
 
     print(f'Precision@{k}: {avg_precision:.4f}')
     print(f'Recall@{k}: {avg_recall:.4f}')
+    print(f'F1-score@{k}: {avg_f1:.4f}')
 
-# Llamar a la función para evaluación
-precision_recall_at_k(predictions, k=10)
+    return avg_precision, avg_recall, avg_f1
+
+# Llamar a la función y guardar los valores de retorno
+precision, recall, f1 = precision_recall_f1_at_k(predictions, k=10)
 
 # --- PASO 8: Generar recomendaciones para un usuario específico ---
-user_id = 0  # Puedes cambiarlo por otro usuario
+user_id = 0  # Cambiar por el usuario deseado
 
-# Obtener todos los productos únicos
 all_products = df['product_id'].unique()
 
-# Predecir la puntuación para cada producto
 predictions = [(item, model.predict(user_id, item).est) for item in all_products]
-
-# Ordenar los productos por puntuación de recomendación
 predictions.sort(key=lambda x: x[1], reverse=True)
 
-# --- PASO 9: Mapear los IDs de productos a nombres ---
-product_mapping = df[['product_id', 'product_name']].drop_duplicates().set_index('product_id')['product_name']
+product_mapping = df.drop_duplicates(subset='product_id').set_index('product_id')['product_name']
 
-# Mostrar las 10 mejores recomendaciones
-top_recommendations = [product_mapping[item[0]] for item in predictions[:10]]
+top_recommendations = [product_mapping.get(item[0], 'Producto desconocido') for item in predictions[:10]]
 print("\nRecomendaciones para el usuario 0:")
 print(top_recommendations)
+
+# --- PASO 9: Exportar resultados a CSV ---
+def save_results(model_name, rmse, precision, recall, f1, file_path):
+    headers = ['Model Name', 'RMSE', 'Precision', 'Recall', 'F1-score']
+    data = [model_name, rmse, precision, recall, f1]
+
+    file_exists = os.path.isfile(file_path)
+
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(headers)
+        writer.writerow(data)
+
+results_file = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_unbalanced\surprise_results_unbalanced.csv"
+model_name = 'Surprise2'
+
+save_results(model_name, rmse, precision, recall, f1, results_file)

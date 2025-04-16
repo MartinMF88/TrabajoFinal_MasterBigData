@@ -6,6 +6,8 @@ from surprise import accuracy
 from collections import defaultdict
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
+import csv
 
 # --- PASO 1: Cargar los datos ---
 zip_path = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\00_Data_Bases\Cluster5_1_items.zip"
@@ -33,7 +35,7 @@ param_grid = {
     'reg_all': [0.03, 0.07, 0.1]
 }
 
-gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3, n_jobs=-1)  # Reducido cv a 3
+gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3, n_jobs=-1)
 gs.fit(data)
 
 # Obtener los mejores parámetros
@@ -53,42 +55,65 @@ predictions = model.test(testset)
 rmse = accuracy.rmse(predictions)
 mae = accuracy.mae(predictions)
 
-def precision_recall_at_k(predictions, k=10, threshold=0.5):
+# --- PASO 8: Evaluación con Precision@K, Recall@K y F1-score ---
+def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
     user_est_true = defaultdict(list)
     for uid, iid, true_r, est, _ in predictions:
         user_est_true[uid].append((est, true_r))
 
-    precisions, recalls = [], []
+    precisions, recalls, f1_scores = [], [], []
+
     for uid, user_ratings in user_est_true.items():
         user_ratings.sort(reverse=True, key=lambda x: x[0])
         top_k = user_ratings[:k]
+
         num_relevant = sum((true_r >= threshold) for (_, true_r) in user_ratings)
         num_recommended_relevant = sum((true_r >= threshold) for (_, true_r) in top_k)
-        precisions.append(num_recommended_relevant / k)
-        recalls.append(num_recommended_relevant / num_relevant if num_relevant != 0 else 0)
+
+        precision = num_recommended_relevant / k
+        recall = num_recommended_relevant / num_relevant if num_relevant != 0 else 0
+        f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+
+        precisions.append(precision)
+        recalls.append(recall)
+        f1_scores.append(f1)
 
     avg_precision = sum(precisions) / len(precisions)
     avg_recall = sum(recalls) / len(recalls)
+    avg_f1 = sum(f1_scores) / len(f1_scores)
 
     print(f'Precision@{k}: {avg_precision:.4f}')
     print(f'Recall@{k}: {avg_recall:.4f}')
+    print(f'F1-score@{k}: {avg_f1:.4f}')
 
-precision_recall_at_k(predictions, k=10)
+    return avg_precision, avg_recall, avg_f1
 
-# --- PASO 8: Generar recomendaciones para un usuario específico ---
-user_id = 0  # Puedes cambiarlo
-all_products = df['product_id'].unique()
-predictions = [(item, model.predict(user_id, item).est) for item in all_products]
-predictions.sort(key=lambda x: x[1], reverse=True)
+# Capturamos las métricas
+precision, recall, f1_score = precision_recall_f1_at_k(predictions, k=10)
 
-# --- PASO 9: Mapear los IDs de productos a nombres ---
-product_mapping = df[['product_id', 'product_name']].drop_duplicates().set_index('product_id')['product_name']
-top_recommendations = [product_mapping.get(item[0], "Producto Desconocido") for item in predictions[:10]]
+# --- PASO 9: Exportar resultados a CSV ---
+def save_results(model_name, rmse, precision, recall, f1_score, file_path):
+    headers = ['Model Name', 'RMSE', 'Precision', 'Recall', 'F1-score']
+    data = [model_name, rmse, precision, recall, f1_score]
 
-print("\nRecomendaciones para el usuario 0:")
-print(top_recommendations)
+    file_exists = os.path.isfile(file_path)
 
-# --- PASO 10: Mostrar métricas finales ---
-print("\n--- MÉTRICAS DE EVALUACIÓN ---")
-print(f"RMSE: {rmse:.4f}")
-print(f"MAE: {mae:.4f}")
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(headers)
+        writer.writerow(data)
+
+results_file = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_unbalanced\surprise_results_unbalanced.csv"
+model_name = 'Surprise4'
+
+# Usar 'f1_score' en lugar de 'f1'
+save_results(model_name, rmse, precision, recall, f1_score, results_file)
+
+# --- PASO 10: Exportar métricas a Excel ---
+metrics_df = pd.DataFrame({
+    'Métrica': ['RMSE', 'MAE', 'Precision@10', 'Recall@10', 'F1-score@10'],
+    'Valor': [rmse, mae, precision, recall, f1_score]
+})
+
+metrics_df.to_excel('metricas_modelo_SVD.xlsx', index=False)

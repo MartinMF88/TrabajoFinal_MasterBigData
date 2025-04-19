@@ -107,7 +107,6 @@ def save_results(model_name, rmse, precision, recall, f1_score, file_path):
 results_file = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_unbalanced\surprise_results_unbalanced.csv"
 model_name = 'Surprise4'
 
-# Usar 'f1_score' en lugar de 'f1'
 save_results(model_name, rmse, precision, recall, f1_score, results_file)
 
 # --- PASO 10: Exportar métricas a Excel ---

@@ -17,7 +17,7 @@ with zipfile.ZipFile(zip_path, 'r') as z:
         df = pd.read_csv(f)
 
 # --- PASO 2: Crear un dataset para Surprise ---
-reader = Reader(rating_scale=(0, 1))  # Como 'reordered' es binario (0 o 1)
+reader = Reader(rating_scale=(0, 1))
 data = Dataset.load_from_df(df[['user_id', 'product_id', 'reordered']], reader)
 
 # --- PASO 3: Dividir los datos en entrenamiento y prueba ---
@@ -32,8 +32,8 @@ predictions = model.test(testset)
 rmse = accuracy.rmse(predictions)
 
 # Convert predictions to binary values
-y_true = [pred.r_ui for pred in predictions]  # Valores reales
-y_pred = [1 if pred.est >= 0.5 else 0 for pred in predictions]  # Predicciones binarias
+y_true = [pred.r_ui for pred in predictions]
+y_pred = [1 if pred.est >= 0.5 else 0 for pred in predictions]
 
 # Calcular Precision, Recall y F1-score
 precision, recall, f1, _ = precision_recall_fscore_support(y_true, y_pred, average='binary')
@@ -43,7 +43,7 @@ print(f"Recall: {recall:.4f}")
 print(f"F1-score: {f1:.4f}")
 
 # --- PASO 6: Generar recomendaciones para un usuario específico ---
-user_id = 0  # Puedes cambiar el usuario de prueba
+user_id = 0  # Cambiar por el usuario deseado
 all_products = df['product_id'].unique()
 predictions = [(item, model.predict(user_id, item).est) for item in all_products]
 

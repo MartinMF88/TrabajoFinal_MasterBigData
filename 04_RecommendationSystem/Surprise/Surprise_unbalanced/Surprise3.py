@@ -86,7 +86,7 @@ def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
 precision, recall, f1 = precision_recall_f1_at_k(predictions, k=10)
 
 # --- PASO 8: Generar recomendaciones para un usuario específico ---
-user_id = 0  # Puedes cambiarlo por otro usuario
+user_id = 0  # Cambiar por el usuario deseado
 
 # Obtener todos los productos únicos
 all_products = df['product_id'].unique()

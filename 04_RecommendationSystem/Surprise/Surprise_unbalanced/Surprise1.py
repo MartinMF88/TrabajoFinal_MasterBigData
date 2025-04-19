@@ -43,7 +43,7 @@ print(f"Recall: {recall:.4f}")
 print(f"F1-score: {f1:.4f}")
 
 # --- PASO 6: Generar recomendaciones para un usuario específico ---
-user_id = 0  # Puedes cambiar el usuario de prueba
+user_id = 0
 all_products = df['product_id'].unique()
 predictions = [(item, model.predict(user_id, item).est) for item in all_products]
 

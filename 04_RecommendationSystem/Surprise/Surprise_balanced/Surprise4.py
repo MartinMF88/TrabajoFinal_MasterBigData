@@ -88,7 +88,6 @@ def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
 
     return avg_precision, avg_recall, avg_f1
 
-# Capturamos las métricas
 precision, recall, f1_score = precision_recall_f1_at_k(predictions, k=10)
 
 # --- PASO 9: Exportar resultados a CSV ---
@@ -107,7 +106,6 @@ def save_results(model_name, rmse, precision, recall, f1_score, file_path):
 results_file = r"C:\Users\marti\Documents\ORT\TrabajoFinal_MasterBigData\04_RecommendationSystem\Surprise\Surprise_balanced\surprise_results_balanced.csv"
 model_name = 'Surprise4'
 
-# Usar 'f1_score' en lugar de 'f1'
 save_results(model_name, rmse, precision, recall, f1_score, results_file)
 
 # --- PASO 10: Exportar métricas a Excel ---

@@ -80,7 +80,6 @@ def precision_recall_f1_at_k(predictions, k=10, threshold=0.5):
 
     return avg_precision, avg_recall, avg_f1
 
-# Llamar a la función y guardar los valores de retorno
 precision, recall, f1 = precision_recall_f1_at_k(predictions, k=10)
 
 # --- PASO 8: Generar recomendaciones para un usuario específico ---
